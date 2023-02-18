@@ -6,7 +6,7 @@
 
 /* #arena { margin: auto; border: 2px solid rgb(124, 133, 130); } */
 #time { margin: 0 auto; }
-#arena { width: 1400px; height: 700px; margin: 0 auto; border: 2px solid #2b2b2b; }
+#arena { width: 1400px; height: 650px; margin: 0 auto; border: 2px solid #2b2b2b; }
 /* #yaxis { width: 100px; height: 513px; position: absolute; border: 0px solid #dadada; }
 #xaxis { width: 520px; height: 100px; position: absolute; border: 0px solid #dadada; }
 #height_lab { position: absolute; transform: rotate(-90deg); }

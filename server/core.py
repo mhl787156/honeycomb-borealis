@@ -4,7 +4,7 @@ import numpy
 import uuid
 import time
 
-from grid import HexGrid, User, HexCoord, HexCell
+from .grid import HexGrid, HexCoord, HexCell
 
 class User:
     def __init__(self, init_cell: HexCell):
@@ -32,23 +32,28 @@ class HoneycombManager():
         self.users = {}
         self.reset_timestamp = time.time()
 
-        print(self.grid.grid)
+        # print(self.grid.grid)
 
-    def add_user(self, location=(0, 0, 0)):
-        cell = self.grid.get_cell(HexCoord(location[0], location[1], location[2]))
+    def add_user(self, location=None):
+        if location is None:
+            cell = self.grid.get_random_cell()
+        else:
+            cell = self.grid.get_cell(HexCoord(location[0], location[1], location[2]))
         new_user = User(cell)
         self.users[new_user.uuid] = new_user
         print(f"Added User {new_user} at location {cell}")
+        return new_user
 
     def remove_user(self, uuid):
-        user = self.users[uuid]
-        del self.users[uuid]
-        print(f"Removing User {user}")
+        if uuid in self.users:
+            user = self.users[uuid]
+            del self.users[uuid]
+            print(f"Removing User {user}")
     
     def get_grid_state(self):
         return {
             "timestamp": self.reset_timestamp,
-            "users": [u.to_dict() for u in self.users]
+            "users": [u.to_dict() for u in self.users.values()]
         }
 
     def run_monitor(self):
