@@ -3,22 +3,23 @@
 <html>
 
     <head>
-        <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">        
+        <link rel="stylesheet" href="{{ url_for('static', filename='dome.css') }}">        
     </head>
 
     <body>
 
         <div id="sky">
-            {% include 'viz/sky.html' %}
+            <!-- {% include 'viz/sky.html' %}# -->
+            <canvas id="sky-canvas"></canvas>
         </div>
 
-        <div id="tree">
+        <!-- <div id="tree">
             {% include 'viz/tree.html' %}
-        </div>
+        </div> -->
 
     </body>
     
     <script src="{{ url_for('static', filename='jquery-3.6.0-min.js') }}"></script>
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <script src="{{ url_for('static', filename='dome.js') }}"></script>
 
 </html>
