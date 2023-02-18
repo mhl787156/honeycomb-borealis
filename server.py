@@ -45,32 +45,38 @@ def move(user_id):
 def getMusicData():
     if request.method == 'GET':
         """return latent space variables"""
+        ts = [0,10,25,0,0,0,0,0,0,5]
         data = {
-            "Ab",
-            "A",
-            "B",
-            "Bb",
-            "C#",
-            "Db",
-            "D",
-            "E",
-            "F",
-            "Fb",
-            "G"
-        }   
-        pass
+            "Ab":ts[0],
+            "A":ts[1],
+            "B":ts[2],
+            "Bb":ts[3],
+            "C#":ts[4],
+            "Db":ts[5],
+            "D":ts[6],
+            "E":ts[7],
+            "F":ts[8],
+            "Fb":ts[9],
+            "G"ts[10]:
+        }
+
+        proc = processMusic(data)
+        # pass
         # userId = request.args.get('user_id')
     else:
         pass
 
-def processNotes():
+def generateRandom():
+
+def processMusic(data):
     consonance_measure = #0-1
-    complexity = 
+    complexity = #0-1
     timestamp_of_call = 
     number_of_notes = 
 
 # seasons
 # base tempo
+# number of participants
 
 
 @app.route("/dome")
