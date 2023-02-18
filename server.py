@@ -84,6 +84,10 @@ def dome():
     return render_template("viz/dome.html", template_folder="templates")
 
 
+@app.route("/interaction")
+def interaction_homepage():
+    return render_template("interaction/main.html", template_folder="templates")
 
 
-app.run(port=5000)
+
+app.run(port=5000, debug=True)
