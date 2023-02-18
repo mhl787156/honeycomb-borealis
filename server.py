@@ -40,9 +40,44 @@ def move(user_id):
     else:
         pass
 
+# Transforms the state variables to latent space
+@app.route("/latent", methods = ['GET', 'POST'])
+def getMusicData():
+    if request.method == 'GET':
+        """return latent space variables"""
+        data = {
+            "Ab",
+            "A",
+            "B",
+            "Bb",
+            "C#",
+            "Db",
+            "D",
+            "E",
+            "F",
+            "Fb",
+            "G"
+        }   
+        pass
+        # userId = request.args.get('user_id')
+    else:
+        pass
+
+def processNotes():
+    consonance_measure = #0-1
+    complexity = 
+    timestamp_of_call = 
+    number_of_notes = 
+
+# seasons
+# base tempo
+
+
 @app.route("/dome")
 def dome():
-    print("here")
-    return render_template("interface.html", template_folder="templates")
+    return render_template("viz/dome.html", template_folder="templates")
+
+
+
 
 app.run(port=5000)
