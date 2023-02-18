@@ -1,5 +1,6 @@
 from __future__ import annotations
 import numpy as np
+import random
 from typing import List
 from musicpy import N
 
@@ -75,6 +76,8 @@ class HexGrid:
         self.axis_rules_semitones = axis_rules_semitones
         self.grid = self.__generate_grid()
 
+        print(self.grid.keys())
+
     def __generate_grid(self):
 
         grid = {} # Mapping between HexCell and HexCell
@@ -118,8 +121,25 @@ class HexGrid:
                     stack.append(new_cell)
 
         return grid
-            
+    
+    def to_dict(self):
+        return {
+            "size": self.size,
+            "axis_semitones": self.axis_rules_semitones,
+            "grid": [c.to_dict() for c in self.grid.values()]
+        }
+
     def get_cell(self, coords: HexCoord):
+        if coords not in self.grid:
+            return None
         return self.grid[coords]
+    
+    def get_random_cell(self):
+        while True:
+            q = np.random.randint(-self.size, self.size, 2)
+            coord = HexCoord(q[0], q[1], r=-q[0]-q[1])
+            cell = self.get_cell(coord)
+            if cell is not None:
+                return cell
 
     

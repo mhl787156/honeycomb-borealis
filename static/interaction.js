@@ -2,21 +2,83 @@ $(document).ready(function() {
 
     var canvas = document.querySelector("#arena")   // Get access to HTML canvas element
     var ctx = canvas.getContext("2d")
-    // var canvasWidth = canvas.width = $('input[name=arena_w]').val()
-    // var canvasHeight = canvas.height = $('input[name=arena_h]').val()
 
     const a = 2 * Math.PI / 6; // Generating Hexgrid
     const r = 40; // Size
     const canvas_center = [canvas.width/2, canvas.height/2]
 
-    const cells = [] // Cells By XY Location
+    const cells = [] // List of hex cells with "point", "center" and "cube"
+    var user = null
+
+    // REGISTER BUTTONS
+    $( "#add" ).click(function() {
+        console.log("Add Button Clicked")
+        $.get("new_participant", function(data, status){
+            // alert("Data: " + ?data + "\nStatus: " + status);
+            console.log(data)
+            user = data
+
+            $("#user_status").text("User now " + user)
+        });
+    });
+
+    $( "#remove" ).click(function() {
+        console.log("Remove Button Clicked")
+        $.post("participants/"+user['uuid'], {"function": "DELETE"}, function(data, status){
+            // alert("Data: " + ?data + "\nStatus: " + status);
+            console.log(data)
+            user=null
+            $("#user_status").text("")
+        });
+    });
 
 
+    //////////////////////////////////
+    //////////////////// MAIN FUNCTIONS
+    //////////////////////////////////
     function init() {
         drawGrid(canvas.width, canvas.height);
+        apply_backend_grid()
         console.log(cells)
+        update_state()
+
+        
     }
     init();
+
+    // BACKEND COMMUNICATION FUNCIONALITY
+    function update_state() {
+        $.get("state", function(data, status){
+            // alert("Data: " + ?data + "\nStatus: " + status);
+            console.log(data)
+        });
+    }
+
+    function apply_backend_grid() {
+        $.get("grid", function(data_, status){
+            data = JSON.parse(data_)
+            console.log(data)
+
+            cells.forEach(function(item) {
+                let ic = item["cube"]
+                for (var i = 0; i < data["grid"].length; i++) {
+                    cubes = data["grid"][i]["coord"]
+                    if (cubes[0] == ic[0] && cubes[1] == ic[1] && cubes[2] == ic[2]) {
+                        item["note"] = data["grid"][i]["note"]
+                        console.log(item)
+                        //Do something
+                        position = item["center"]
+                        ctx.font = "20px Arial";
+                        ctx.fillText(item["note"].toString(), position[0]-8, position[1]);
+                        break
+                    }
+                    
+                    
+                }
+            })
+        });
+    }  
+    // GRID DRAWING FUNCTIONS
 
     function drawGrid(width, height) {
         let i = 0
@@ -24,7 +86,7 @@ $(document).ready(function() {
             for (let x = r, j = 0; x + r * (1 + Math.cos(a)) < height; x += r * (1 + Math.cos(a)), y += (-1) ** j++ * r * Math.sin(a)) {
                 hex = drawHexagon(y, x);
                 ctx.font = "10px Arial";
-                ctx.fillText(hex["cube"].toString(), y, x);
+                ctx.fillText(hex["cube"].toString(), y-15, x+20);
                 i += 1
             }
         }
