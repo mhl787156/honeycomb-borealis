@@ -1,6 +1,6 @@
-from flask import Flask
+from flask import Flask, request, render_template
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/s/', static_folder='static')
 
 # Create a URL route in our application for "/"
 @app.route('/participants', methods = ['GET', 'POST', 'DELETE'])
@@ -40,5 +40,9 @@ def move(user_id):
     else:
         pass
 
+@app.route("/dome")
+def dome():
+    print("here")
+    return render_template("interface.html", template_folder="templates")
 
 app.run(port=5000)
