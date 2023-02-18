@@ -1,6 +1,6 @@
-from flask import Flask
+from flask import Flask, request, render_template
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/s/', static_folder='static')
 
 # Create a URL route in our application for "/"
 @app.route('/participants', methods = ['GET', 'POST', 'DELETE'])
@@ -39,6 +39,45 @@ def move(user_id):
         # userId = request.args.get('user_id')
     else:
         pass
+
+# Transforms the state variables to latent space
+@app.route("/latent", methods = ['GET', 'POST'])
+def getMusicData():
+    if request.method == 'GET':
+        """return latent space variables"""
+        data = {
+            "Ab",
+            "A",
+            "B",
+            "Bb",
+            "C#",
+            "Db",
+            "D",
+            "E",
+            "F",
+            "Fb",
+            "G"
+        }   
+        pass
+        # userId = request.args.get('user_id')
+    else:
+        pass
+
+def processNotes():
+    consonance_measure = #0-1
+    complexity = 
+    timestamp_of_call = 
+    number_of_notes = 
+
+# seasons
+# base tempo
+
+
+@app.route("/dome")
+def dome():
+    return render_template("viz/dome.html", template_folder="templates")
+
+
 
 
 app.run(port=5000)

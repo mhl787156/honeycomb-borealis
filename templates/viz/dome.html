@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">        
+    </head>
+
+    <body>
+
+        <div id="sky">
+            {% include 'viz/sky.html' %}
+        </div>
+
+        <div id="tree">
+            {% include 'viz/tree.html' %}
+        </div>
+
+    </body>
+    
+    <script src="{{ url_for('static', filename='jquery-3.6.0-min.js') }}"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+
+</html>
