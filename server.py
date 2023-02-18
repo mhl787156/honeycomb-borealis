@@ -63,11 +63,11 @@ def getMusicData():
     else:
         pass
 
-def processNotes():
-    consonance_measure = #0-1
-    complexity = 
-    timestamp_of_call = 
-    number_of_notes = 
+# def processNotes():
+# consonance_measure = #0-1
+# complexity = 
+# timestamp_of_call = 
+# number_of_notes = 
 
 # seasons
 # base tempo
@@ -78,6 +78,10 @@ def dome():
     return render_template("viz/dome.html", template_folder="templates")
 
 
+@app.route("/interaction")
+def interaction_homepage():
+    return render_template("interaction/main.html", template_folder="templates")
 
 
-app.run(port=5000)
+
+app.run(port=5000, debug=True)

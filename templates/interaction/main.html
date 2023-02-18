@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='interaction.css') }}">        
+    </head>
+
+    <body>
+
+        <canvas id="arena" width="800" height="500"></canvas>
+        <button id="add">add person</button>
+        <button id="remove">remove person</button>
+
+    </body>
+    
+    <script src="{{ url_for('static', filename='jquery-3.6.0-min.js') }}"></script>
+    <script src="{{ url_for('static', filename='interaction.js') }}"></script>
+
+</html>
