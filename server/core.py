@@ -14,6 +14,7 @@ class User:
     
     def move(self, cell: HexCell):
         self.cell = cell
+        self.cell.activate()
         self.history.append(cell)
     
     def to_dict(self):
@@ -40,7 +41,7 @@ class HoneycombManager():
         else:
             cell = self.grid.get_cell(HexCoord(location[0], location[1], location[2]))
         new_user = User(cell)
-        self.users[new_user.uuid] = new_user
+        self.users[str(new_user.uuid)] = new_user
         print(f"Added User {new_user} at location {cell}")
         return new_user
 
@@ -49,6 +50,17 @@ class HoneycombManager():
             user = self.users[uuid]
             del self.users[uuid]
             print(f"Removing User {user}")
+        
+    def move_user(self, uuid, location):
+        print(f"looking for uuid {uuid} in {self.users}")
+        if uuid in self.users:
+            user = self.users[uuid]
+            cell = self.grid.get_cell(HexCoord(location[0], location[1], location[2]))
+            if cell:
+                user.move(cell)
+                print(f"Moved User {user} to cell {cell}")
+            else:
+                print(f"Attempted to move user {user} to location {location}, location not found")
     
     def get_grid_state(self):
         return {
@@ -56,9 +68,11 @@ class HoneycombManager():
             "users": [u.to_dict() for u in self.users.values()]
         }
 
-    def run_monitor(self):
-        # Run every second
-        self.reset_timestamp = time.time()
+    def getMusicData(self):
+        # # Assume users are somewhere on the grid
+        # # Get all active cells
+        # active_cells = []
+        return self.grid.current_active_cells()
 
 
 

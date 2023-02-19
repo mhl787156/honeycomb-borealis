@@ -3,6 +3,7 @@ import numpy as np
 import random
 from typing import List
 from musicpy import N
+import time
 
 class HexCoord:
 
@@ -48,10 +49,29 @@ class HexCoord:
 
 class HexCell:
 
-    def __init__(self,coord: HexCoord, note):
+    def __init__(self,coord: HexCoord, note, timeout=10):
         self.coord = coord
         self.note = note
-    
+        self.active = False
+        self.active_time = time.time()
+        self.timeout = False
+
+    def activate(self):
+        self.active = True
+        self.active_time = time.time()
+
+    def is_active(self):
+        if self.active:
+            if time.time() - self.active_time > self.timeout:
+                self.deactivate
+        return self.active
+
+    def get_active_time(self):
+        return self.active_time()
+
+    def deactivate(self):
+        self.active = False 
+
     def to_dict(self):
         return {
             "coord": list(self.coord.as_tuple()),
@@ -128,6 +148,10 @@ class HexGrid:
             "axis_semitones": self.axis_rules_semitones,
             "grid": [c.to_dict() for c in self.grid.values()]
         }
+
+    def current_active_cells(self):
+        active_cells = [(cell, cell.get_active_time()) for cell in self.grid.values() if cell.is_active()]
+        return active_cells            
 
     def get_cell(self, coords: HexCoord):
         if coords not in self.grid:

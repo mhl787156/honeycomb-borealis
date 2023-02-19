@@ -54,12 +54,15 @@ def state():
         pass
 
 # Create a URL route in our application for "/"
-@app.route("/move/<user_id>", methods = ['GET', 'POST'])
+@app.route("/move/<user_id>", methods = ['POST'])
 def move(user_id):
-    if request.method == 'GET':
+    if request.method == 'POST':
         """return current state of the system"""
-        pass
-        # userId = request.args.get('user_id')
+        data = request.form
+        vals = data["cube"].split("_")
+        print(f"Moving uuid {user_id} to {vals}")
+        manager.move_user(user_id, [int(v) for v in vals])
+        return {}
     else:
         pass
 
@@ -69,24 +72,27 @@ CONSONANCE = 0.5
 def getMusicData():
     if request.method == 'GET':
         """return latent space variables"""
-        ts = [0,10,25,0,0,0,0,0,0,5,0]
-        data = {
-            "Ab":ts[0],
-            "A":ts[1],
-            "B":ts[2],
-            "Bb":ts[3],
-            "C#":ts[4],
-            "Db":ts[5],
-            "D":ts[6],
-            "E":ts[7],
-            "F":ts[8],
-            "Fb":ts[9],
-            "G":ts[10]
-        }
+        active_cells = manager.getMusicData()
 
-        CONSONANCE = processMusic(data)
-        data['consonance'] = CONSONANCE
-        return data
+        # This is list of ({"coord:..., "note":..."}, timestamp)
+        # ts = [0,10,25,0,0,0,0,0,0,5,0]
+        # data = {
+        #     "Ab":ts[0],
+        #     "A":ts[1],
+        #     "B":ts[2],
+        #     "Bb":ts[3],
+        #     "C#":ts[4],
+        #     "Db":ts[5],
+        #     "D":ts[6],
+        #     "E":ts[7],
+        #     "F":ts[8],
+        #     "Fb":ts[9],
+        #     "G":ts[10]
+        # }
+
+        # processMusic(data)
+        # data['consonance'] = CONSONANCE
+        return json.dumps(active_cells)
         # userId = request.args.get('user_id')
     else:
         pass

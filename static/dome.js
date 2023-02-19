@@ -49,16 +49,24 @@ $(document).ready(function() {
     HEX_TO_NODE = {}
     function getData() {
         $.get("/latent", function(data){
-            CONSONANCE = data.consonance
+            // CONSONANCE = data.consonance
             // HEX_ACTIVE = data.hex_active
-            ha = {
-                'H(-2, -4, 6)': 500,
-                'H(-1, -3, 6)': 200
+            console.log(data)
+            for (i=0; i<data.length; i++)
+            {
+                HEX_ACTIVE.push(String(data[i]["coord"]))
             }
-            HEX_ACTIVE = Object.keys(ha)
+            // ha = data.hex_active.coord
+            // HEX_ACTIVE = Object.keys(ha)
         });
+    }  
+
+    function playNote(note) {
+        const synth = new Tone.Synth().toDestination()
+
+        synth.triggerAttackRelease(note, "8n")
     }
-    
+
     var canvas = document.querySelector("#sky-canvas")
     var ctx = canvas.getContext("2d")
     var canvasWidth = canvas.width = 500
@@ -108,7 +116,6 @@ $(document).ready(function() {
 
     function drawNodes(nodes)
     {
-        console.log(nodes)
         for (i=0; i<HEX_ACTIVE.length; i++)
         {
             hex = HEX_ACTIVE[i]

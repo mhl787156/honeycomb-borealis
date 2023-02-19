@@ -13,12 +13,17 @@ $(document).ready(function() {
     const cells_lookup = {}
 
     var users = []
+    var user_locs = []
     var user = null
     var initialised = false
     var grabbed_backend_data = false
 
     var clicked_fillstyle = "green"
     var active_fillstyle = "yellow"
+
+    var check_mousemove = false
+    var mousedown_xy = [0,0]
+    var mouseup_xy = [0,0]
 
     // State Boolean Checks
     var show_grid_annotations = false
@@ -49,14 +54,14 @@ $(document).ready(function() {
         show_grid_annotations = !show_grid_annotations
     })
 
+
     // Select Cell on click
     canvas.addEventListener('mousedown', function(e) {
         cursor_pos = getCursorPosition(canvas, e)
         x = cursor_pos[0] - canvas_center[0] - r/1.4
         y = cursor_pos[1] - canvas_center[1] - r/1.9
-        clicked_cell = select_cell_at_location([x, y])
-        clicked_cell["clicked"] = true
-        setTimeout(function(){clicked_cell["clicked"] = false}, 250)
+        mousedown_xy = [x,y]
+        check_mousemove = false
     })
 
     function select_cell_at_location(pos) {
@@ -65,6 +70,46 @@ $(document).ready(function() {
         clicked_cell = cells[clicked_cell_idx]
         return clicked_cell
     }
+
+
+    canvas.addEventListener('mousemove', function(e) {
+        check_mousemove = true
+    })
+
+
+    canvas.addEventListener('mouseup', function(e) {
+        cursor_pos = getCursorPosition(canvas, e)
+        x = cursor_pos[0] - canvas_center[0] - r/1.4
+        y = cursor_pos[1] - canvas_center[1] - r/1.9
+        mouseup_xy = [x,y]
+
+        if(check_mousemove) {
+            // Click and drag happened
+            // If mousedown was on an active user, move that user otherwise ignore
+            source_cell = select_cell_at_location(mousedown_xy)
+            // console.log(source_cell)
+            current_user = null
+            // console.log(users)
+            users.forEach(function(subuser) {
+                cube = subuser["cell"]["coord"]
+                // console.log(cube, source_cell["cube"])
+                if(hash_cube_coord(cube) === hash_cube_coord(source_cell["cube"])) {
+                    current_user = subuser
+                }
+            })
+            console.log("Found current user", current_user)
+            if(current_user) {
+                destination_cell = select_cell_at_location(mouseup_xy)
+                move_user(current_user, destination_cell)
+            }
+            
+        } else {
+            // Only Click
+            clicked_cell = select_cell_at_location(mouseup_xy)
+            clicked_cell["clicked"] = true
+            setTimeout(function(){clicked_cell["clicked"] = false}, 250)
+        }
+    })
 
     //////////////////////////////////
     //////////////////// MAIN FUNCTIONS
@@ -82,15 +127,13 @@ $(document).ready(function() {
     function loop() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        
-
         if(loopcount % 10 == 0){update_state()}
 
         // Disable all active cells
         cells.forEach(function(item){item["active"]=false})
 
         // Parse user and activate its cells
-        var user_locs = []
+        user_locs = []
         users.forEach(function(subuser) {
             cube = subuser["cell"]["coord"]
             user_cell = cells[cells_lookup[hash_cube_coord(cube)]]
@@ -136,6 +179,15 @@ $(document).ready(function() {
             grabbed_backend_data = true
         });
     }  
+
+    function move_user(user, cell) {
+        console.log("moving user", user, cell)
+        $.post(
+            "move/"+user["uuid"], 
+        {
+            cube: hash_cube_coord(cell["cube"])
+        }, function(r){})
+    }
     // GRID DRAWING FUNCTIONS
 
     function getCursorPosition(canvas, event) {
