@@ -63,6 +63,7 @@ def move(user_id):
     else:
         pass
 
+CONSONANCE = 0.5
 # Transforms the state variables to latent space
 @app.route("/latent", methods = ['GET', 'POST'])
 def getMusicData():
@@ -83,10 +84,8 @@ def getMusicData():
             "G":ts[10]
         }
 
-        proc = processMusic(data)
-        # timestamp_of_call = 
-        data['consonance_measure'] = proc['consonance_measure']
-        data['complexity'] = proc['complexity']
+        processMusic(data)
+        data['consonance'] = CONSONANCE
         return data
         # userId = request.args.get('user_id')
     else:
@@ -94,19 +93,20 @@ def getMusicData():
 
 import random
 def processMusic(data):
-    r1 = random.uniform(0,1)
-    r2 = random.uniform(0,1)
-    # consonance_measure = #0-1
-    # complexity = #0-1
-    return {
-        'consonance_measure': r1,
-        'complexity': r2
-    }
+    r1 = random.uniform(-1,1)*0.1
+    CONSONANCE = CONSONANCE+r1
+    if new_consonance < 0:
+        CONSONANCE = 0
+    if new_consonance > 1:
+        CONSONANCE = 1
 
 # seasons
 # base tempo
 # number of participants
 
+@app.route("/landing")
+def landing():
+    return render_template("landing.html")
 
 @app.route("/dome")
 def dome():

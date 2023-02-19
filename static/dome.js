@@ -54,11 +54,10 @@ $(document).ready(function() {
                 // }
             }
         }
-
+        coords = [...new Set(coords)];
         return coords
     }
 
-    // getData()
     hex_c = generateGridCoordinates()
     hex_active = {}
 
@@ -81,7 +80,15 @@ $(document).ready(function() {
         ctx.fillStyle = '#fff'
         ctx.lineWidth = 2
         // ctx.strokeStyle = '#fff'
+        radgrad = ctx.createRadialGradient(x, y, 0, x, y, r)
+        radgrad.addColorStop(0, 'rgba(0,0,255,1)');
+        radgrad.addColorStop(0.6, 'rgba(0,120,250,.9)');
+        radgrad.addColorStop(1, 'rgba(255,255,255,0)');
+        
+        // draw shape
+        ctx.fillStyle = radgrad;
         ctx.arc(x, y, r, 0, 2 * Math.PI);
+        // ctx.fillRect(0,0,r,r);
         ctx.fill()
         ctx.closePath()
     }
@@ -91,7 +98,7 @@ $(document).ready(function() {
         for (i=0; i<hex_c.length; i++)
         {
             c = hex_c[i]
-            r = Math.random()*2
+            r = Math.random()*12
             drawStar(c[0],c[1],r)
         }
     }
@@ -100,10 +107,26 @@ $(document).ready(function() {
     drawGrid()
 
 
-    interval = window.setInterval(function(){
-        // getData()
-        fillCanvas()
-        drawGrid()
-    }, 500); 
+    function drawParticle(x,y,r)
+    {
+        ctx.beginPath()
+        ctx.fillStyle = '#fff'
+        ctx.lineWidth = 2
+        ctx.strokeStyle = '#fff'
+        
+        // draw shape
+        ctx.fillStyle = radgrad;
+        ctx.arc(x, y, r, 0, 2 * Math.PI);
+        ctx.fill()
+        ctx.closePath()
+    }
+
+    drawParticles()
+
+    // interval = window.setInterval(function(){
+    //     // getData()
+    //     fillCanvas()
+    //     drawGrid()
+    // }, 500); 
 
 });
