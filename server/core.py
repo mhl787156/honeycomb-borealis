@@ -34,7 +34,7 @@ class HoneycombManager():
 
         # print(self.grid.grid)
 
-    def add_user(self, location=None):
+    def add_user(self, location=(0, 0, 0)):
         if location is None:
             cell = self.grid.get_random_cell()
         else:
