@@ -54,7 +54,7 @@ class HexCell:
         self.note = note
         self.active = False
         self.active_time = time.time()
-        self.timeout = False
+        self.timeout = timeout
 
     def activate(self):
         self.active = True
@@ -67,7 +67,7 @@ class HexCell:
         return self.active
 
     def get_active_time(self):
-        return self.active_time()
+        return self.active_time
 
     def deactivate(self):
         self.active = False 
@@ -150,7 +150,7 @@ class HexGrid:
         }
 
     def current_active_cells(self):
-        active_cells = [(cell, cell.get_active_time()) for cell in self.grid.values() if cell.is_active()]
+        active_cells = [(cell.to_dict(), cell.get_active_time()) for cell in self.grid.values() if cell.is_active()]
         return active_cells            
 
     def get_cell(self, coords: HexCoord):

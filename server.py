@@ -89,7 +89,7 @@ def getMusicData():
         #     "Fb":ts[9],
         #     "G":ts[10]
         # }
-
+        print(active_cells)
         # processMusic(data)
         # data['consonance'] = CONSONANCE
         return json.dumps(active_cells)
@@ -126,4 +126,4 @@ def interaction_homepage():
 
 
 
-app.run(port=5000, debug=True)
+app.run(host="0.0.0.0", port=5000, debug=True)

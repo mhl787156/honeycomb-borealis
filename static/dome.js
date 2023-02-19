@@ -1,6 +1,17 @@
 $(document).ready(function() {
 
+    var synth_playing = false
+    const synth = new Tone.PolySynth({
+        onsilence: () => synth_playing=false
+      }).toDestination()
+
     grid_radius = 8 // 8 hexagons in grid radius
+
+    //attach a click listener to a play button
+    document.querySelector('button')?.addEventListener('click', async () => {
+        await Tone.start()
+        console.log('audio is ready')
+    })
 
     function generateGridCoordinates()
     {
@@ -47,24 +58,39 @@ $(document).ready(function() {
     HEX_ACTIVE = ['H(-2, -4, 6)', 'H(-2, -2, 6)']
     HEX_PLAY = {}
     HEX_TO_NODE = {}
+    HEX_TO_NOTE = {}
     function getData() {
-        $.get("/latent", function(data){
+        $.get("/latent", function(data_){
             // CONSONANCE = data.consonance
             // HEX_ACTIVE = data.hex_active
-            console.log(data)
+            data = JSON.parse(data_)
+            console.log("DATA", data)
             for (i=0; i<data.length; i++)
             {
-                HEX_ACTIVE.push(String(data[i]["coord"]))
+                console.log(data[i][0])
+                HEX_ACTIVE.push(String(data[i][0]["coord"]))
+                HEX_TO_NOTE[String(data[i][0]["coord"])] = data[i][0]["note"]
             }
+            // console.log(HEX_TO_NOTE)
             // ha = data.hex_active.coord
             // HEX_ACTIVE = Object.keys(ha)
         });
     }  
 
-    function playNote(note) {
-        const synth = new Tone.Synth().toDestination()
-
-        synth.triggerAttackRelease(note, "8n")
+    function playNote(notes) {
+        if(notes && !synth_playing){
+            console.log("Notes", notes)
+            var more_notes = []
+            notes.forEach(element => {
+                more_notes.push(element + "5")
+            });
+            console.log("Playing note " + more_notes)
+            const current_time = Tone.now()
+            synth.triggerAttackRelease(more_notes, "8n", current_time)
+            synth_playing=true
+        } else {
+            // console.log("Note undefined")
+        }
     }
 
     var canvas = document.querySelector("#sky-canvas")
@@ -115,7 +141,8 @@ $(document).ready(function() {
     }
 
     function drawNodes(nodes)
-    {
+    {   
+        var notes_to_play = []
         for (i=0; i<HEX_ACTIVE.length; i++)
         {
             hex = HEX_ACTIVE[i]
@@ -123,7 +150,13 @@ $(document).ready(function() {
             r = Math.random()*12
             // r = 1+2/timeToPlay(h)
             drawStar(h[0],h[1],r)
+            // console.log("PLAYING NOTE", hex, 
+            to_play_n = HEX_TO_NOTE[hex]
+            if (! (to_play_n in notes_to_play)) {
+                notes_to_play.push(to_play_n)
+            }
         }
+        playNote(notes_to_play)
     }
 
     function checkNodes()
