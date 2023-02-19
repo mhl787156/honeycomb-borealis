@@ -100,11 +100,12 @@ def getMusicData():
 import random
 def processMusic(data):
     r1 = random.uniform(-1,1)*0.1
-    CONSONANCE = CONSONANCE+r1
-    if new_consonance < 0:
-        CONSONANCE = 0
-    if new_consonance > 1:
-        CONSONANCE = 1
+    new_c = CONSONANCE+r1
+    if new_c < 0:
+        new_c = 0
+    if new_c > 1:
+        new_c = 1
+    return new_c
 
 # seasons
 # base tempo
