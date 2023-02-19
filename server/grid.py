@@ -76,7 +76,7 @@ class HexGrid:
         self.axis_rules_semitones = axis_rules_semitones
         self.grid = self.__generate_grid()
 
-        print(self.grid.keys())
+        # print(self.grid.keys())
 
     def __generate_grid(self):
 
