@@ -53,6 +53,12 @@ $(document).ready(function() {
         });
     }  
 
+    function playNote(note) {
+        const synth = new Tone.Synth().toDestination()
+
+        synth.triggerAttackRelease(note, "8n")
+    }
+
     var canvas = document.querySelector("#sky-canvas")
     var ctx = canvas.getContext("2d")
     var canvasWidth = canvas.width = 500
