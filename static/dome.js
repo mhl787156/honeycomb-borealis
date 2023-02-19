@@ -1,11 +1,5 @@
 $(document).ready(function() {
 
-    function getData() {
-        $.get("/latent", function(data){
-            console.log(data)
-        });
-    }    
-
     grid_radius = 8 // 8 hexagons in grid radius
 
     function generateGridCoordinates()
@@ -40,18 +34,6 @@ $(document).ready(function() {
                 coords.push([x1,y2])
                 coords.push([x2,y1])
                 coords.push([x2,y2])
-                // if (y1==center[1])
-                // {
-                //     coords.push([x1,y2])
-                // }
-                // if (x1!=center[0])
-                // {
-                //     coords.push([x2,y1])
-                // }      
-                // if (x1!=center[0] && y1!=center[1])
-                // {
-                //     coords.push([x2,y2])
-                // }
             }
         }
         coords = [...new Set(coords)];
@@ -59,7 +41,17 @@ $(document).ready(function() {
     }
 
     hex_c = generateGridCoordinates()
-    hex_active = {}
+
+    bar_length = 1000
+    CONSONANCE = 0.5
+    HEX_ACTIVE = {}
+    HEX_PLAY = {}
+    function getData() {
+        $.get("/latent", function(data){
+            CONSONANCE = data.consonance
+            HEX_ACTIVE = data.hex_active
+        });
+    }  
 
     var canvas = document.querySelector("#sky-canvas")
     var ctx = canvas.getContext("2d")
@@ -93,19 +85,35 @@ $(document).ready(function() {
         ctx.closePath()
     }
 
-    function drawGrid()
+    function generatePlayTimes()
     {
-        for (i=0; i<hex_c.length; i++)
+        for (i=0; i<HEX_ACTIVE.length; i++)
         {
-            c = hex_c[i]
-            r = Math.random()*12
+            h = HEX_ACTIVE[i]
+            HEX_PLAY[h] = Math.random()*bar_length
+        }
+    }
+
+    function timeToPlay(hex)
+    {
+        ts_now = Date.now()
+        return HEX_PLAY[hex] - ts_now
+    }
+
+    function drawNodes()
+    {
+        for (i=0; i<HEX_ACTIVE.length; i++)
+        {
+            h = HEX_ACTIVE[i]
+            // r = Math.random()*12
+            max_r = 3
+            r = 1+2/timeToPlay(h)
             drawStar(c[0],c[1],r)
         }
     }
 
+    // Black bg
     fillCanvas()
-    drawGrid()
-
 
     function drawParticle(x,y,r)
     {
@@ -115,18 +123,27 @@ $(document).ready(function() {
         ctx.strokeStyle = '#fff'
         
         // draw shape
-        ctx.fillStyle = radgrad;
         ctx.arc(x, y, r, 0, 2 * Math.PI);
         ctx.fill()
         ctx.closePath()
     }
 
-    drawParticles()
+    drawParticle(260,260,2)
+    
+    interval = window.setInterval(function(){
+        getData()
+        
+        ts = Data.now()
+        if (ts%bar_length == 0)
+        {
+            generatePlayTimes()
+        }
 
-    // interval = window.setInterval(function(){
-    //     // getData()
-    //     fillCanvas()
-    //     drawGrid()
-    // }, 500); 
+        drawNodes()
+        
+        console.log(CONSONANCE)
+        // fillCanvas()
+        // drawGrid()
+    }, 50); 
 
 });
